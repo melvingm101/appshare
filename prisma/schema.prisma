@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LikeType {
+  LIKE
+  LOVE
+  LAUGH
+  WOW
+  DISLIKE
+}
+
+enum Tags {
+  WEB
+  MOBILE
+  DESIGN
+  TOOLS
+  PROMOTION
+  VIDEO
+  GAMES
+  OTHER
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  name        String
+  photoUrl    String?
+  projects    Project[]
+  comments    Comment[]
+  points      Int           @default(0)
+  likes       Like[]
+  tagline     String        @default("Just another appshare user!")
+  CommentLike CommentLike[]
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  banner      String?
+  projectUrl  String?
+  videoUrl    String?
+  comments    Comment[]
+  tags        Tags[]
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
+  views       Int       @default(0)
+  likes       Like[]
+  createdAt   DateTime  @default(now())
+}
+
+model Comment {
+  id          Int           @id @default(autoincrement())
+  body        String
+  project     Project       @relation(fields: [projectId], references: [id])
+  projectId   Int
+  author      User          @relation(fields: [authorId], references: [id])
+  authorId    Int
+  createdAt   DateTime      @default(now())
+  CommentLike CommentLike[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  likeType  LikeType
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+model CommentLike {
+  id        Int      @id @default(autoincrement())
+  likeType  LikeType
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
