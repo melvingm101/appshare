@@ -56,8 +56,8 @@ export default function Navbar() {
                 </Link>
                 <div className="sm:ml-6 flex items-center">
                   <div className="flex space-x-4">
-                    {navigation.map((item, index) => (
-                      <div key={index}>{item.icon}</div>
+                    {navigation.map((item) => (
+                      <div key={item.name}>{item.icon}</div>
                     ))}
                   </div>
                 </div>

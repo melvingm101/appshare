@@ -11,8 +11,8 @@ const ProjectList = ({ projects }: { projects: CurrentProject[] | null }) => {
 
   return (
     <div className="mx-3 grid grid-cols-1 sm:grid-cols-2 sm:gap-2">
-      {projects.map((project, index) => (
-        <div key={index}>
+      {projects.map((project) => (
+        <div key={project.id}>
           <Card project={project} />
         </div>
       ))}

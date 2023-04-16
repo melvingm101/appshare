@@ -94,8 +94,8 @@ const CreateForm = () => {
         handleSubmit={formParameters.handleSubmit(onSubmit)}
       >
         <div className="m-5 max-w-screen-sm mx-auto mt-24 mb-32 sm:mb-28">
-          {createFormInputs.map((item, index) => (
-            <div key={index}>{returnInput(item, formParameters)}</div>
+          {createFormInputs.map((item) => (
+            <div key={item.name}>{returnInput(item, formParameters)}</div>
           ))}
         </div>
       </Modal>

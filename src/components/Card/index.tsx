@@ -41,8 +41,8 @@ const Card = ({ project }: { project: CurrentProject }) => {
             )}
           </div>
           <div>
-            {project.tags.map((tag, index) => (
-              <Pill tag={tag} key={index} />
+            {project.tags.map((tag) => (
+              <Pill tag={tag} key={tag} />
             ))}
           </div>
         </Link>

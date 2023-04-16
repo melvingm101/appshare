@@ -9,10 +9,6 @@ const Avatar = ({
   src: string | null | undefined;
   name: string;
 }) => {
-  if (src) {
-    return <img className="h-8 w-8 rounded-full" src={src} alt="" />;
-  }
-
   const avatar = useMemo(() => {
     return createAvatar(botttsNeutral, {
       size: 128,
@@ -32,6 +28,10 @@ const Avatar = ({
       seed: name,
     }).toDataUriSync();
   }, []);
+
+  if (src) {
+    return <img className="h-8 w-8 rounded-full" src={src} alt="" />;
+  }
 
   return <img className="h-8 w-8 rounded-full" src={avatar} alt="Avatar" />;
 };
