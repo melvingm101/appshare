@@ -4,6 +4,9 @@ import Modal from "../Modal";
 import Avatar from "../Avatar";
 import { InputFieldType } from "@/client/models";
 import { returnInput } from "../FormInputs";
+import { useCurrentStore } from "@/client/zustand";
+import postRequest from "@/client/http/postRequest";
+import { useRouter } from "next/router";
 
 const createFormInputs: InputFieldType[] = [
   {
@@ -51,12 +54,20 @@ const createFormInputs: InputFieldType[] = [
 ];
 
 const CreateForm = () => {
+  const router = useRouter();
+  const user = useCurrentStore((state: any) => state.user);
+  const token = useCurrentStore((state: any) => state.token);
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
     formParameters.reset();
     setOpen(false);
+    const response = await postRequest("/api/posts", data, token);
+    if (response?.data) {
+      console.log(response.data);
+      router.push(`/projects/${response.data.id}`);
+    }
+    console.log(data);
   };
   const formParameters = useForm();
 
@@ -72,7 +83,7 @@ const CreateForm = () => {
         onClick={() => setOpen(true)}
         className="flex items-center rounded-md bg-primary-color p-5 cursor-pointer mb-4 text-gray-500 mx-3 text-sm"
       >
-        <Avatar src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+        <Avatar src={user.photoUrl} name={user.name} />
         <div className="ml-3">Add your project here...</div>
       </div>
       <Modal

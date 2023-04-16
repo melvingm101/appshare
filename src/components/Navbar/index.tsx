@@ -1,16 +1,12 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  BellIcon,
-  XMarkIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
-import { useCurrentStore } from "@/client/zustand";
+import { BellIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { LoggedInUser, useCurrentStore } from "@/client/zustand";
 import { githubSignIn, googleSignIn, logout } from "@/client/firebase";
 import GoogleIcon from "../Icons/Google";
 import GithubIcon from "../Icons/Github";
 import Avatar from "../Avatar";
+import Link from "next/link";
 
 const navigation = [
   {
@@ -39,27 +35,25 @@ const loginList = [
   },
 ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function Navbar() {
-  const user = useCurrentStore((state: any) => state.user.user);
+  const user: LoggedInUser | null = useCurrentStore((state: any) => state.user);
 
   return (
     <Disclosure as="nav" className="bg-primary-color">
-      {({ open }) => (
+      {() => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="flex flex-1 items-stretch justify-start pl-5 sm:pl-0">
-                <div className="flex flex-shrink-0 items-center">
-                  <img
-                    className="hidden h-8 w-auto sm:block"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt="Your Company"
-                  />
-                </div>
+                <Link href="/">
+                  <div className="flex flex-shrink-0 items-center">
+                    <img
+                      className="hidden h-8 w-auto sm:block"
+                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                      alt="Your Company"
+                    />
+                  </div>
+                </Link>
                 <div className="sm:ml-6 flex items-center">
                   <div className="flex space-x-4">
                     {navigation.map((item, index) => (
@@ -83,7 +77,7 @@ export default function Navbar() {
                     <div>
                       <Menu.Button className="flex rounded-full bg-gray-800 text-sm">
                         <span className="sr-only">Open user menu</span>
-                        <Avatar src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                        <Avatar src={user.photoUrl} name={user.name} />
                       </Menu.Button>
                     </div>
                     <Transition

@@ -1,10 +1,6 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import checkAuth from "@/server/auth/checkAuth";
-import uploadImage from "@/server/cloudinary/uploadImage";
 import createUser from "@/server/database/users/createUser";
 import getUser from "@/server/database/users/getUser";
-import { botttsNeutral } from "@dicebear/collection";
-import { createAvatar } from "@dicebear/core";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
@@ -16,6 +12,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ data: null, error: "Method not allowed!" });
+  }
+
   const { email, authorized } = await checkAuth(req);
   if (!authorized) {
     return res.status(401).json({ data: null, error: "Unauthorized!" });
@@ -30,40 +30,18 @@ export default async function handler(
   try {
     const user = await getUser(email!);
     if (!user) {
-      const avatar = createAvatar(botttsNeutral, {
-        size: 128,
-        backgroundType: ["solid"],
-        eyes: [
-          "bulging",
-          "dizzy",
-          "eva",
-          "frame1",
-          "frame2",
-          "happy",
-          "robocop",
-          "roundFrame01",
-          "roundFrame02",
-          "shade01",
-        ],
-      }).toDataUriSync();
+      const user = await createUser(
+        email!,
+        req.body["name"].replace(/[^a-zA-Z0-9]/g, "")
+      );
 
-      const uploadedAvatar = await uploadImage(avatar);
-
-      if (uploadedAvatar) {
-        const user = await createUser(
-          email!,
-          req.body["name"].replace(/[^a-zA-Z0-9]/g, ""),
-          uploadedAvatar
-        );
-
-        return res.status(200).json({ data: user, error: null });
-      }
-
-      return res.status(500).json({
-        data: null,
-        error: "Something went wrong. Please try again later!",
-      });
+      return res.status(200).json({ data: user, error: null });
     }
+
+    return res.status(200).json({
+      data: user,
+      error: null,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({

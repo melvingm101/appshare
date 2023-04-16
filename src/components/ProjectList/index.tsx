@@ -1,7 +1,23 @@
+import { CurrentProject } from "@/client/models";
 import React from "react";
+import Card from "../Card";
 
-const ProjectList = () => {
-  return <div className="mx-3 mt-5">ProjectList</div>;
+const ProjectList = ({ projects }: { projects: CurrentProject[] | null }) => {
+  if (!projects) {
+    return <div>No projects yet!</div>;
+  }
+
+  console.log(projects);
+
+  return (
+    <div className="mx-3 grid grid-cols-1 sm:grid-cols-2 sm:gap-2">
+      {projects.map((project, index) => (
+        <div key={index}>
+          <Card project={project} />
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default ProjectList;

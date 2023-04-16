@@ -1,23 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
 import { auth } from "@/client/firebase";
-import axios from "axios";
 import { useCurrentStore } from "@/client/zustand";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const setUser = useCurrentStore((state: any) => state.user.setUser);
+  const checkUser = useCurrentStore((state: any) => state.checkUser);
+  const isFetching = useRef(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onIdTokenChanged(auth, async (user) => {
       if (user) {
         const token = await user.getIdToken();
-        console.log(token);
+        if (!isFetching.current) {
+          isFetching.current = true;
+          await checkUser(token, {
+            name: user.displayName,
+          });
+        }
       }
-
-      setUser(user);
     });
 
     return () => unsubscribe();
@@ -25,8 +30,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <ToastContainer />
       <Navbar />
-      <div className="mt-3 mx-auto max-w-screen-md">
+      <div>
         <Component {...pageProps} />
       </div>
     </>

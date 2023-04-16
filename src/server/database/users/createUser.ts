@@ -1,13 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "..";
 
-const prisma = new PrismaClient();
-
-const createUser = async (email: string, name: string, photoUrl: string) => {
+const createUser = async (email: string, name: string) => {
   const user = await prisma.user.create({
     data: {
       email,
       name,
-      photoUrl,
     },
     select: {
       name: true,
