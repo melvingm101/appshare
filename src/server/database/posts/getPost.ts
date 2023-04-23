@@ -1,4 +1,4 @@
-import prisma from "..";
+import { prisma } from "..";
 
 const getPost = async (id: number) => {
   try {
@@ -8,6 +8,16 @@ const getPost = async (id: number) => {
       },
       data: {
         views: { increment: 1 },
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        projectUrl: true,
+        tags: true,
+        banner: true,
+        views: true,
+        likes: true,
       },
     });
     return project;

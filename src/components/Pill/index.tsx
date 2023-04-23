@@ -15,7 +15,7 @@ const colorConvert = {
 const Pill = ({ tag }: { tag: string }) => {
   return (
     <span
-      className={`text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full ${colorConvert[tag]}`}
+      className={`text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full mb-2 ${colorConvert[tag]}`}
     >
       {tagConvert(tag)}
     </span>

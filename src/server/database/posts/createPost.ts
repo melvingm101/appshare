@@ -1,5 +1,5 @@
 import { Tags } from "@prisma/client";
-import prisma from "..";
+import { prisma } from "..";
 
 const createPost = async (
   title: string,

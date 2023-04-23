@@ -1,38 +1,62 @@
-import { Inter } from "next/font/google";
 import PageHead from "@/components/PageHead";
 import ProjectList from "@/components/ProjectList";
 import CreateForm from "@/components/CreateForm";
-import { useCurrentStore } from "@/client/zustand";
+import { initializeStore, useStore } from "@/zustand";
 import TabMenu from "@/components/TabMenu";
 import { GetServerSideProps } from "next/types";
 import getPosts from "@/server/database/posts/getPosts";
 import { CurrentProject } from "@/client/models";
+import { useEffect } from "react";
+import Scoreboard from "@/components/Scoreboard";
 
 export default function Home({
   projects,
 }: {
   projects: CurrentProject[] | null;
 }) {
-  const user = useCurrentStore((state: any) => state.user);
+  const user = useStore((state) => state.user);
+  const setPosts = useStore((state) => state.setPosts);
+  const currentProjects = useStore((state) => state.posts);
+
+  useEffect(() => {
+    if (projects && projects !== currentProjects) {
+      setPosts(projects);
+    }
+  }, [projects]);
 
   return (
-    <div className="mt-3 mx-auto max-w-screen-md">
+    <div className="my-3 mx-auto max-w-screen-lg">
       <PageHead
         title="Home | AppShare"
         description="The homepage of Appshare"
       />
       {user ? <CreateForm /> : null}
-      <TabMenu />
-      <ProjectList projects={projects} />
+      <div className="flex">
+        <div>
+          <TabMenu />
+          <ProjectList projects={currentProjects} />
+        </div>
+        <Scoreboard />
+      </div>
     </div>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const projects = await getPosts();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const sort =
+    context.query.sort && typeof context.query.sort === "string"
+      ? context.query.sort
+      : "latest";
+  const projects = await getPosts(sort);
+  const zustandStore = initializeStore();
+  if (projects) {
+    zustandStore.getState().setPosts(projects);
+  }
+
   return {
     props: {
-      projects,
+      initialZustandState: JSON.parse(JSON.stringify(zustandStore.getState())),
+      projects: projects,
     }, // will be passed to the page component as props
   };
 };

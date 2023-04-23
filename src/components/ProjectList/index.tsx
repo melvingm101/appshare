@@ -3,11 +3,13 @@ import React from "react";
 import Card from "../Card";
 
 const ProjectList = ({ projects }: { projects: CurrentProject[] | null }) => {
-  if (!projects) {
-    return <div>No projects yet!</div>;
+  if (!projects || projects.length === 0) {
+    return (
+      <div className="mt-5 text-center text-sm text-gray-400">
+        No projects yet!
+      </div>
+    );
   }
-
-  console.log(projects);
 
   return (
     <div className="mx-3 grid grid-cols-1 sm:grid-cols-2 sm:gap-2">

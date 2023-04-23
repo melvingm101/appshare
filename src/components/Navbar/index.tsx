@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { LoggedInUser, useCurrentStore } from "@/client/zustand";
+import { LoggedInUser, useStore } from "@/zustand";
 import { githubSignIn, googleSignIn, logout } from "@/client/firebase";
 import GoogleIcon from "../Icons/Google";
 import GithubIcon from "../Icons/Github";
@@ -36,10 +36,10 @@ const loginList = [
 ];
 
 export default function Navbar() {
-  const user: LoggedInUser | null = useCurrentStore((state: any) => state.user);
+  const user: LoggedInUser | null = useStore((state: any) => state.user);
 
   return (
-    <Disclosure as="nav" className="bg-primary-color">
+    <Disclosure as="nav" className="bg-primary-color fixed top-0 w-full z-10">
       {() => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -89,12 +89,15 @@ export default function Navbar() {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-primary-color border border-gray-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-primary-color border border-gray-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none cursor-pointer">
                         <Menu.Item>
                           {() => (
                             <div
                               className="block px-4 py-2 text-sm text-white"
-                              onClick={async () => await logout()}
+                              onClick={async () => {
+                                await logout();
+                                window.location.reload();
+                              }}
                             >
                               Sign out
                             </div>

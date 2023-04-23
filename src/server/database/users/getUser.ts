@@ -1,4 +1,4 @@
-import prisma from "..";
+import { prisma } from "..";
 
 const getUser = async (email: string) => {
   const user = await prisma.user.findFirst({
@@ -6,6 +6,7 @@ const getUser = async (email: string) => {
       email,
     },
     select: {
+      id: true,
       name: true,
       photoUrl: true,
       points: true,

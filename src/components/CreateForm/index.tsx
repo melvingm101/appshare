@@ -4,9 +4,12 @@ import Modal from "../Modal";
 import Avatar from "../Avatar";
 import { InputFieldType } from "@/client/models";
 import { returnInput } from "../FormInputs";
-import { useCurrentStore } from "@/client/zustand";
+import { useStore } from "@/zustand";
 import postRequest from "@/client/http/postRequest";
 import { useRouter } from "next/router";
+import alertMessage from "@/client/toastMessage";
+import { auth } from "@/client/firebase";
+import { User } from "firebase/auth";
 
 const createFormInputs: InputFieldType[] = [
   {
@@ -55,20 +58,21 @@ const createFormInputs: InputFieldType[] = [
 
 const CreateForm = () => {
   const router = useRouter();
-  const user = useCurrentStore((state: any) => state.user);
-  const token = useCurrentStore((state: any) => state.token);
+  const firebaseUser: User = useStore((state: any) => state.firebaseUser);
+  const user: any = useStore((state: any) => state.user);
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
+
   const onSubmit = async (data: any) => {
-    formParameters.reset();
-    setOpen(false);
+    const token = await firebaseUser.getIdToken();
     const response = await postRequest("/api/posts", data, token);
     if (response?.data) {
-      console.log(response.data);
       router.push(`/projects/${response.data.id}`);
+    } else {
+      alertMessage("Something went wrong!");
     }
-    console.log(data);
   };
+
   const formParameters = useForm();
 
   const toggleModal = (open: boolean) => {

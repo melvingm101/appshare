@@ -10,27 +10,31 @@ type Data = {
   error: string | null;
 };
 
-const getProjects = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const getProjects = async () => {
   const projects = await getPosts();
   if (projects) {
-    return res.status(200).json({ data: projects, error: null });
+    return { data: projects, error: null, statusCode: 200 };
   } else {
-    return res
-      .status(500)
-      .json({ data: null, error: "Unexpected error, try again later!" });
+    return {
+      data: null,
+      error: "Unexpected error, try again later!",
+      statusCode: 500,
+    };
   }
 };
 
-const addProject = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const addProject = async (req: NextApiRequest) => {
   const { email, authorized } = await checkAuth(req);
   if (!authorized) {
-    return res.status(401).json({ data: null, error: "Unauthorized!" });
+    return { data: null, error: "Unauthorized!", statusCode: 401 };
   }
 
   if (!req.body["title"] || !req.body["description"] || !req.body["tags"]) {
-    return res
-      .status(400)
-      .json({ data: null, error: "Please provide the required fields" });
+    return {
+      data: null,
+      error: "Please provide the required fields",
+      statusCode: 400,
+    };
   }
 
   let banner = "";
@@ -39,11 +43,12 @@ const addProject = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     if (tempImage) {
       banner = tempImage;
     } else {
-      return res.status(500).json({
+      return {
         data: null,
         error:
           "Something went wrong when uploading the image. Please try again.",
-      });
+        statusCode: 500,
+      };
     }
   }
 
@@ -59,19 +64,21 @@ const addProject = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     );
 
     if (project) {
-      return res.status(200).json({ data: project, error: null });
+      return { data: project, error: null, statusCode: 200 };
     }
 
-    return res.status(200).json({
+    return {
       data: null,
-      error: "Something went wrong. Please try again later.",
-    });
+      error: "Something went wrong. Please try again later",
+      statusCode: 500,
+    };
   } catch (err) {
     console.log(err);
-    return res.status(500).json({
+    return {
       data: null,
-      error: "Something went wrong. Please try again later!",
-    });
+      error: "Something went wrong. Please try again later",
+      statusCode: 500,
+    };
   }
 };
 
@@ -80,9 +87,15 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "POST") {
-    addProject(req, res);
+    const response = await addProject(req);
+    return res
+      .status(response.statusCode)
+      .json({ data: response.data, error: response.error });
   } else if (req.method === "GET") {
-    getProjects(req, res);
+    const response = await getProjects();
+    return res
+      .status(response.statusCode)
+      .json({ data: response.data, error: response.error });
   } else {
     return res.status(405).json({ data: null, error: "Method not allowed!" });
   }

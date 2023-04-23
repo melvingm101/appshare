@@ -1,6 +1,20 @@
-import prisma from "..";
+import { prisma } from "..";
 
-const getPosts = async () => {
+const getPosts = async (sort: string | null | undefined) => {
+  const orderBy =
+    sort === "latest"
+      ? {
+          createdAt: "desc",
+        }
+      : sort === "viewed"
+      ? {
+          views: "desc",
+        }
+      : {
+          likes: {
+            _count: "desc",
+          },
+        };
   try {
     const projects = await prisma.project.findMany({
       select: {
@@ -11,13 +25,12 @@ const getPosts = async () => {
         projectUrl: true,
         views: true,
         author: true,
-        likes: true,
         tags: true,
+        likes: true,
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: { ...orderBy },
     });
+
     return projects;
   } catch (err) {
     return null;

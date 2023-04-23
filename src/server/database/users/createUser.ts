@@ -1,4 +1,4 @@
-import prisma from "..";
+import { prisma } from "..";
 
 const createUser = async (email: string, name: string) => {
   const user = await prisma.user.create({
@@ -7,6 +7,7 @@ const createUser = async (email: string, name: string) => {
       name,
     },
     select: {
+      id: true,
       name: true,
       photoUrl: true,
       points: true,
