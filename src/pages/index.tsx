@@ -7,7 +7,6 @@ import { GetServerSideProps } from "next/types";
 import getPosts from "@/server/database/posts/getPosts";
 import { CurrentProject } from "@/client/models";
 import { useEffect } from "react";
-import Scoreboard from "@/components/Scoreboard";
 
 export default function Home({
   projects,
@@ -25,7 +24,7 @@ export default function Home({
   }, [projects]);
 
   return (
-    <div className="my-3 mx-auto max-w-screen-lg">
+    <div>
       <PageHead
         title="Home | AppShare"
         description="The homepage of Appshare"
@@ -36,7 +35,6 @@ export default function Home({
           <TabMenu />
           <ProjectList projects={currentProjects} />
         </div>
-        <Scoreboard />
       </div>
     </div>
   );

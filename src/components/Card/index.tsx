@@ -10,7 +10,7 @@ import ReactionList from "../ReactionList";
 const Card = ({ project }: { project: CurrentProject }) => {
   const user = useStore((state) => state.user);
   return (
-    <div className="flex flex-col bg-primary-color rounded-lg shadow mt-3 h-[310px]">
+    <div className="flex flex-col bg-primary-color rounded-lg shadow mt-3">
       <div className="px-4 flex flex-col justify-between h-full">
         <Link href={`/projects/${project.id}`}>
           <div>
@@ -29,7 +29,7 @@ const Card = ({ project }: { project: CurrentProject }) => {
             </div>
             {project.banner ? (
               <div
-                className="w-full h-[130px] rounded-sm mb-3"
+                className="w-full h-[150px] rounded-sm mb-3"
                 data-testid="card-banner"
               >
                 <Image
@@ -42,7 +42,7 @@ const Card = ({ project }: { project: CurrentProject }) => {
                 />
               </div>
             ) : (
-              <div className="h-[130px] mb-3 overflow-hidden text-ellipsis text-sm">
+              <div className="max-h-[150px] mb-3 overflow-hidden text-sm">
                 {project.description}
               </div>
             )}

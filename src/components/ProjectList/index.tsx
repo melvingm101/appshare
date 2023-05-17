@@ -12,7 +12,7 @@ const ProjectList = ({ projects }: { projects: CurrentProject[] | null }) => {
   }
 
   return (
-    <div className="mx-3 grid grid-cols-1 sm:grid-cols-2 sm:gap-2">
+    <div className="mx-3 grid grid-cols-1">
       {projects.map((project) => (
         <div key={project.id}>
           <Card project={project} />
