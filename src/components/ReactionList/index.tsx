@@ -19,11 +19,13 @@ const ReactionListItem = ({
       {count > 0 && (
         <div
           className={`px-2 ${
-            isSinglePage ? "bg-primary-color" : "mt-2 py-0.5 bg-secondary-color"
+            isSinglePage ? "" : "mt-2 py-0.5"
           } rounded-md flex items-center hover:text-white text-sm select-none mr-2 ${
             userLike.length > 0 && userLike[0].likeType === currentLikeType
-              ? "border border-blue-500 bg-blue-950"
-              : ""
+              ? "border border-blue-500 bg-blue-900"
+              : isSinglePage
+              ? "bg-primary-color"
+              : "bg-secondary-color"
           }`}
           style={{
             fontFamily:

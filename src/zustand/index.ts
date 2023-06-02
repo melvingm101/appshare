@@ -5,12 +5,15 @@ import { User } from "firebase/auth";
 import { createContext, useContext } from "react";
 import { AppshareProject, LoggedInUser } from "./models";
 import patchRequest from "@/client/http/patchRequest";
+import getRequest from "@/client/http/getRequest";
 
 interface AppshareStoreInterface {
   user: LoggedInUser | null;
   firebaseUser: User | null;
   isUserLoaded: boolean;
+  activeTab: string;
   posts: AppshareProject[];
+  fetchPosts: (sort: string) => void;
   showPost: AppshareProject;
   checkUser: (user: User, body: any) => void;
   setPosts: (projects: AppshareProject[]) => void;
@@ -22,6 +25,7 @@ const getDefaultInitialState = () => ({
   user: null,
   firebaseUser: null,
   isUserLoaded: false,
+  activeTab: "latest",
   showPost: {
     id: 1,
     title: "",
@@ -72,6 +76,20 @@ export const initializeStore = (
           isUserLoaded: true,
           firebaseUser: user,
         }));
+      }
+    },
+    fetchPosts: async (sort: string) => {
+      const responseData = await getRequest("/api/posts", {
+        params: { sort },
+      });
+
+      if (responseData && responseData.data) {
+        set(() => ({
+          activeTab: sort,
+          posts: responseData.data,
+        }));
+      } else {
+        alertMessage(responseData?.error);
       }
     },
     setPosts: (projects: AppshareProject[]) => {

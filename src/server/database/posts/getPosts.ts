@@ -1,20 +1,25 @@
 import { prisma } from "..";
 
-const getPosts = async (sort: string | null | undefined) => {
-  const orderBy =
-    sort === "latest"
-      ? {
-          createdAt: "desc",
-        }
-      : sort === "viewed"
-      ? {
-          views: "desc",
-        }
-      : {
-          likes: {
-            _count: "desc",
-          },
-        };
+const getOrderBy = (sort: string) => {
+  switch (sort) {
+    case "reacted":
+      return {
+        likes: {
+          _count: "desc",
+        },
+      };
+    case "viewed":
+      return {
+        views: "desc",
+      };
+    default:
+      return {
+        createdAt: "desc",
+      };
+  }
+};
+
+const getPosts = async (sort = "latest") => {
   try {
     const projects = await prisma.project.findMany({
       select: {
@@ -28,7 +33,7 @@ const getPosts = async (sort: string | null | undefined) => {
         tags: true,
         likes: true,
       },
-      orderBy: { ...orderBy },
+      orderBy: { ...getOrderBy(sort) },
     });
 
     return projects;

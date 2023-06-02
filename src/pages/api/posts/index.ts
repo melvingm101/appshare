@@ -10,8 +10,8 @@ type Data = {
   error: string | null;
 };
 
-const getProjects = async () => {
-  const projects = await getPosts();
+const getProjects = async (queryParams: string) => {
+  const projects = await getPosts(queryParams);
   if (projects) {
     return { data: projects, error: null, statusCode: 200 };
   } else {
@@ -92,7 +92,10 @@ export default async function handler(
       .status(response.statusCode)
       .json({ data: response.data, error: response.error });
   } else if (req.method === "GET") {
-    const response = await getProjects();
+    const response = await getProjects(
+      typeof req.query.sort === "string" ? req.query.sort : ""
+    );
+
     return res
       .status(response.statusCode)
       .json({ data: response.data, error: response.error });
