@@ -27,11 +27,12 @@ const getPosts = async (sort = "latest") => {
         title: true,
         description: true,
         banner: true,
-        projectUrl: true,
         views: true,
-        author: true,
         tags: true,
         likes: true,
+        _count: {
+          select: { comments: true },
+        },
       },
       orderBy: { ...getOrderBy(sort) },
     });

@@ -1,21 +1,46 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import { useStore } from "@/zustand";
+import { User } from "firebase/auth";
+import postRequest from "@/client/http/postRequest";
+import alertMessage from "@/client/toastMessage";
 
-const CreateComment = () => {
+const CreateComment = ({ id }: { id: number }) => {
+  const formParameters = useForm();
+  const firebaseUser: User = useStore((state: any) => state.firebaseUser);
+
+  const onSubmit = async (data: any) => {
+    const token = await firebaseUser.getIdToken();
+    const response = await postRequest(
+      `/api/posts/${id}/comments`,
+      data,
+      token
+    );
+    if (response?.data) {
+      console.log(response);
+      formParameters.reset();
+    } else {
+      alertMessage("Something went wrong!");
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={formParameters.handleSubmit(onSubmit)}>
       <label htmlFor="chat" className="sr-only">
         Your message
       </label>
-      <div className="flex items-center px-3 py-2 rounded-lg bg-secondary-color">
-        <textarea
-          id="chat"
-          rows={1}
-          className="block mx-4 p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-700 bg-primary-color placeholder-gray-400 text-white resize-none"
+      <div className="flex items-center px-8 mt-4 mb-4 rounded-lg bg-secondary-color">
+        <input
+          id="body"
+          className="block mr-4 p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-700 bg-primary-color placeholder-gray-400 text-white resize-none"
           placeholder="Your comment..."
-        ></textarea>
+          {...formParameters.register("body", {
+            required: true,
+          })}
+        />
         <button
           type="submit"
-          className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
+          className="inline-flex justify-center text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
         >
           <svg
             aria-hidden="true"

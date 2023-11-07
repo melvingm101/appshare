@@ -8,7 +8,6 @@ import { useStore } from "@/zustand";
 import postRequest from "@/client/http/postRequest";
 import { useRouter } from "next/router";
 import alertMessage from "@/client/toastMessage";
-import { auth } from "@/client/firebase";
 import { User } from "firebase/auth";
 
 const createFormInputs: InputFieldType[] = [

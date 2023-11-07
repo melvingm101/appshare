@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import checkAuth from "@/server/auth/checkAuth";
+import { initialCheck } from "@/server/auth/initialCheck";
 import { prisma } from "@/server/database";
 import addLike from "@/server/database/likes/addLike";
 import findLike from "@/server/database/likes/findLike";
@@ -14,19 +14,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.method !== "PATCH") {
-    return res.status(405).json({ data: null, error: "Method not allowed!" });
-  }
+  const { email, error, statusCode } = await initialCheck(
+    req,
+    ["PATCH"],
+    [{ fieldName: "like", error: "An issue occurred when liking the project." }]
+  );
 
-  const { email, authorized } = await checkAuth(req);
-  if (!authorized) {
-    return res.status(401).json({ data: null, error: "Unauthorized!" });
-  }
-
-  if (!req.body["like"]) {
-    return res.status(400).json({
+  if (error) {
+    return res.status(statusCode).json({
       data: null,
-      error: "Please provide the required fields",
+      error,
     });
   }
 
@@ -57,6 +54,9 @@ export default async function handler(
             author: true,
             tags: true,
             likes: true,
+            _count: {
+              select: { comments: true },
+            },
           },
         });
 

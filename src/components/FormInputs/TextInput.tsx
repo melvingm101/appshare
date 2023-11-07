@@ -12,9 +12,11 @@ function TextInput({
 }) {
   return (
     <div className="sm:col-span-4 mt-5">
-      <label htmlFor="email" className="block text-sm font-medium leading-6">
-        {inputField.labelText}
-      </label>
+      {inputField.labelText !== "" && (
+        <label htmlFor="email" className="block text-sm font-medium leading-6">
+          {inputField.labelText}
+        </label>
+      )}
       <div className="mt-2">
         <input
           id={inputField.name}

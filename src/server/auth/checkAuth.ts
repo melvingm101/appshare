@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest } from "next";
 import auth from "./firebaseAdmin";
 
 const checkAuth = async (req: NextApiRequest) => {
@@ -15,11 +15,10 @@ const checkAuth = async (req: NextApiRequest) => {
     }
 
     currentEmail = email;
+    return { email: currentEmail, authorized: true };
   } catch (error) {
     return { email: null, authorized: false };
   }
-
-  return { email: currentEmail, authorized: true };
 };
 
 export default checkAuth;

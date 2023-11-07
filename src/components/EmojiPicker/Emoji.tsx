@@ -3,12 +3,14 @@ import { useStore } from "@/zustand";
 
 const Emoji = ({
   label,
+  url,
   symbol,
   setOpenPicker,
   id,
   isSinglePage,
 }: {
   label: string;
+  url: string;
   symbol: string;
   setOpenPicker: (setOpen: boolean) => void;
   id: number;
@@ -23,7 +25,7 @@ const Emoji = ({
       onClick={async () => {
         const token = await user?.getIdToken();
         if (token) {
-          addLike(id, { like: label }, token, isSinglePage);
+          addLike(url, { like: label }, token, isSinglePage);
           setOpenPicker(false);
         }
       }}

@@ -15,4 +15,5 @@ export interface AppshareProject {
   banner: string | null;
   views: number;
   likes: any[];
+  _count: any;
 }

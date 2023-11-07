@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { FaceSmileIcon } from "@heroicons/react/24/outline";
 import { CurrentProject } from "@/client/models";
 import Image from "next/image";
 import Pill from "../Pill";
@@ -7,7 +8,31 @@ import EmojiPicker from "../EmojiPicker";
 import { useStore } from "@/zustand";
 import ReactionList from "../ReactionList";
 
+const meta = (views: number, likes: any[], comments: any) => {
+  const currentViews = `${views} ${views === 1 ? "view" : "views"}`;
+  const currentLikes = `${likes.length} ${
+    likes.length === 1 ? "reaction" : "reactions"
+  }`;
+  const currentComments = comments
+    ? `| ${comments} ${comments === 1 ? "comment" : "comments"}`
+    : "| 0 comments";
+  return `${currentViews} | ${currentLikes} ${currentComments}`;
+};
+
+const EmojiButton = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <div
+      className="px-2 py-0.5 bg-secondary-color rounded-md flex items-center hover:text-white cursor-pointer text-sm select-none"
+      onClick={onClick}
+    >
+      <FaceSmileIcon className="h-4 w-4" />
+    </div>
+  );
+};
+
 const Card = ({ project }: { project: CurrentProject }) => {
+  const [openPicker, setOpenPicker] = useState(false);
+
   const user = useStore((state) => state.user);
   return (
     <div className="flex flex-col bg-primary-color rounded-lg shadow mt-3">
@@ -21,11 +46,9 @@ const Card = ({ project }: { project: CurrentProject }) => {
               >
                 {project.title}
               </h5>
-              <div className="text-xs">{`${project.views} ${
-                project.views === 1 ? "view" : "views"
-              } | ${project.likes.length} ${
-                project.likes.length === 1 ? "reaction" : "reactions"
-              }`}</div>
+              <div className="text-xs">
+                {meta(project.views, project.likes, project._count.comments)}
+              </div>
             </div>
             {project.banner ? (
               <div
@@ -53,8 +76,19 @@ const Card = ({ project }: { project: CurrentProject }) => {
             ))}
           </div>
         </Link>
-        <div className="flex">
-          {user && <EmojiPicker id={project.id} isSinglePage={false} />}
+        <div className="flex mb-3 h-[30px] items-stretch mt-3">
+          {user && (
+            <EmojiPicker
+              id={project.id}
+              isSinglePage={false}
+              isOpen={openPicker}
+              setIsOpen={setOpenPicker}
+              url={`/api/posts/${project.id}/like`}
+              button={
+                <EmojiButton onClick={() => setOpenPicker((prev) => !prev)} />
+              }
+            />
+          )}
           <ReactionList likes={project.likes} isSinglePage={false} />
         </div>
       </div>

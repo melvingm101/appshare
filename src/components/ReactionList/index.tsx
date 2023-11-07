@@ -18,9 +18,7 @@ const ReactionListItem = ({
     <>
       {count > 0 && (
         <div
-          className={`px-2 ${
-            isSinglePage ? "" : "mt-2 py-0.5"
-          } rounded-md flex items-center hover:text-white text-sm select-none mr-2 ${
+          className={`px-2 rounded-md flex items-center hover:text-white text-sm select-none mr-2 ${
             userLike.length > 0 && userLike[0].likeType === currentLikeType
               ? "border border-blue-500 bg-blue-900"
               : isSinglePage
@@ -55,7 +53,7 @@ const ReactionList = ({
   const userLike = likes.filter((item) => item.authorId === user?.id);
 
   return (
-    <div className={`flex ${isSinglePage ? "" : "mb-3"}`}>
+    <div className={"flex"}>
       <ReactionListItem
         symbol="👍🏻"
         count={likeList.length}

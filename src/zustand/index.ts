@@ -18,7 +18,7 @@ interface AppshareStoreInterface {
   checkUser: (user: User, body: any) => void;
   setPosts: (projects: AppshareProject[]) => void;
   setShowPost: (project: AppshareProject) => void;
-  addLike: (id: number, body: any, token: string, isShowPage: boolean) => void;
+  addLike: (url: string, body: any, token: string, isShowPage: boolean) => void;
 }
 
 const getDefaultInitialState = () => ({
@@ -103,16 +103,12 @@ export const initializeStore = (
       }));
     },
     addLike: async (
-      id: number,
+      url: string,
       body: any,
       token: string,
       isShowPage: boolean
     ) => {
-      const responseData = await patchRequest(
-        `/api/posts/${id}/like`,
-        body,
-        token
-      );
+      const responseData = await patchRequest(url, body, token);
 
       if (!responseData || !responseData.data) {
         alertMessage(responseData?.error);

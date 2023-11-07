@@ -1,33 +1,25 @@
-import { FaceSmileIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React from "react";
 import Emoji from "./Emoji";
 
 const EmojiPicker = ({
   id,
   isSinglePage = false,
+  url,
+  button,
+  isOpen,
+  setIsOpen,
 }: {
   id: number;
   isSinglePage: boolean;
+  url: string;
+  button: JSX.Element;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [openPicker, setOpenPicker] = useState(false);
-
   return (
-    <div
-      className={`flex text-gray-500 mr-2 ${
-        isSinglePage ? "" : "mb-3"
-      } relative`}
-    >
-      <div
-        className={`px-2 ${
-          isSinglePage ? "bg-primary-color" : "mt-2 py-0.5 bg-secondary-color"
-        } rounded-md flex items-center hover:text-white cursor-pointer text-sm select-none`}
-        onClick={() => {
-          setOpenPicker((prevValue) => !prevValue);
-        }}
-      >
-        <FaceSmileIcon className="h-4 w-4" />
-      </div>
-      {openPicker && (
+    <div className="flex mr-2 relative">
+      {button}
+      {isOpen && (
         <div
           className={`absolute ${
             isSinglePage
@@ -39,40 +31,45 @@ const EmojiPicker = ({
             symbol="👍🏻"
             label="like"
             setOpenPicker={(value) => {
-              setOpenPicker(value);
+              setIsOpen(value);
             }}
             id={id}
             isSinglePage={isSinglePage}
+            url={url}
           />
           <Emoji
             symbol="❤️"
             label="love"
             setOpenPicker={(value) => {
-              setOpenPicker(value);
+              setIsOpen(value);
             }}
             id={id}
             isSinglePage={isSinglePage}
+            url={url}
           />
           <Emoji
             symbol="🤣"
             label="laugh"
-            setOpenPicker={setOpenPicker}
+            setOpenPicker={setIsOpen}
             id={id}
             isSinglePage={isSinglePage}
+            url={url}
           />
           <Emoji
             symbol="😮"
             label="wow"
-            setOpenPicker={setOpenPicker}
+            setOpenPicker={setIsOpen}
             id={id}
             isSinglePage={isSinglePage}
+            url={url}
           />
           <Emoji
             symbol="👎🏻"
             label="dislike"
-            setOpenPicker={setOpenPicker}
+            setOpenPicker={setIsOpen}
             id={id}
             isSinglePage={isSinglePage}
+            url={url}
           />
         </div>
       )}
