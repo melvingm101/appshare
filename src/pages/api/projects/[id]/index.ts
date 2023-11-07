@@ -33,7 +33,7 @@ export default async function handler(
         });
       }
 
-      if (project.author !== user) {
+      if (project.author.id !== user.id) {
         return res.status(401).json({
           data: null,
           error: "Not authorized!",
@@ -43,8 +43,8 @@ export default async function handler(
       const isProjectDeleted = await deleteProject(project.id);
       if (isProjectDeleted) {
         return res.status(200).json({
-          data: null,
-          error: "Project deleted!",
+          data: "Project deleted!",
+          error: null,
         });
       }
     }

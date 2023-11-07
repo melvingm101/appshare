@@ -7,6 +7,9 @@ import Pill from "../Pill";
 import EmojiPicker from "../EmojiPicker";
 import { useStore } from "@/zustand";
 import ReactionList from "../ReactionList";
+import deleteRequest from "@/client/http/deleteRequest";
+import alertMessage from "@/client/toastMessage";
+import { User } from "firebase/auth";
 
 const meta = (views: number, likes: any[], comments: any) => {
   const currentViews = `${views} ${views === 1 ? "view" : "views"}`;
@@ -32,6 +35,7 @@ const EmojiButton = ({ onClick }: { onClick: () => void }) => {
 
 const Card = ({ project }: { project: CurrentProject }) => {
   const [openPicker, setOpenPicker] = useState(false);
+  const firebaseUser: User = useStore((state: any) => state.firebaseUser);
 
   const user = useStore((state) => state.user);
   return (
@@ -49,6 +53,11 @@ const Card = ({ project }: { project: CurrentProject }) => {
               <div className="text-xs">
                 {meta(project.views, project.likes, project._count.comments)}
               </div>
+            </div>
+            <div className="flex flex-wrap">
+              {project.tags.map((tag) => (
+                <Pill tag={tag} key={tag} />
+              ))}
             </div>
             {project.banner ? (
               <div
@@ -70,13 +79,28 @@ const Card = ({ project }: { project: CurrentProject }) => {
               </div>
             )}
           </div>
-          <div className="flex flex-wrap">
-            {project.tags.map((tag) => (
-              <Pill tag={tag} key={tag} />
-            ))}
-          </div>
         </Link>
         <div className="flex mb-3 h-[30px] items-stretch mt-3">
+          {user && project.author.id === user.id && (
+            <button
+              type="button"
+              className="bg-red-800 text-white border border-red-700 font-medium rounded-md text-xs px-5 h-full text-center mr-2 mb-2"
+              onClick={async () => {
+                const token = await firebaseUser.getIdToken();
+                const response = await deleteRequest(
+                  `/api/projects/${project.id}`,
+                  token
+                );
+                if (response?.data) {
+                  alertMessage("Post deleted!", "success");
+                } else {
+                  alertMessage("Something went wrong!");
+                }
+              }}
+            >
+              Delete
+            </button>
+          )}
           {user && (
             <EmojiPicker
               id={project.id}

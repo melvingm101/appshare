@@ -30,6 +30,7 @@ const getProjects = async (sort = "latest") => {
         views: true,
         tags: true,
         likes: true,
+        author: true,
         _count: {
           select: { comments: true },
         },

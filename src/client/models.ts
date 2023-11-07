@@ -6,6 +6,14 @@ export interface InputFieldType {
   required: boolean;
 }
 
+interface Author {
+  id: number;
+  name: string;
+  photoUrl: string | null | undefined;
+  points: number;
+  tagline: string;
+}
+
 export interface CurrentProject {
   id: number;
   title: string;
@@ -16,4 +24,5 @@ export interface CurrentProject {
   views: number;
   likes: any[];
   _count: any;
+  author: Author;
 }
