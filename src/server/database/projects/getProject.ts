@@ -1,6 +1,6 @@
 import { prisma } from "..";
 
-const getPost = async (id: number) => {
+const getProject = async (id: number) => {
   try {
     const project = await prisma.project.update({
       where: {
@@ -18,6 +18,7 @@ const getPost = async (id: number) => {
         banner: true,
         views: true,
         likes: true,
+        author: true,
       },
     });
     return project;
@@ -26,4 +27,4 @@ const getPost = async (id: number) => {
   }
 };
 
-export default getPost;
+export default getProject;

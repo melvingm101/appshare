@@ -12,12 +12,12 @@ interface AppshareStoreInterface {
   firebaseUser: User | null;
   isUserLoaded: boolean;
   activeTab: string;
-  posts: AppshareProject[];
-  fetchPosts: (sort: string) => void;
-  showPost: AppshareProject;
+  projects: AppshareProject[];
+  fetchProjects: (sort: string) => void;
+  showProject: AppshareProject;
   checkUser: (user: User, body: any) => void;
-  setPosts: (projects: AppshareProject[]) => void;
-  setShowPost: (project: AppshareProject) => void;
+  setProjects: (projects: AppshareProject[]) => void;
+  setShowProject: (project: AppshareProject) => void;
   addLike: (url: string, body: any, token: string, isShowPage: boolean) => void;
 }
 
@@ -26,7 +26,7 @@ const getDefaultInitialState = () => ({
   firebaseUser: null,
   isUserLoaded: false,
   activeTab: "latest",
-  showPost: {
+  showProject: {
     id: 1,
     title: "",
     description: "",
@@ -36,7 +36,7 @@ const getDefaultInitialState = () => ({
     banner: "",
     views: 0,
   },
-  posts: [],
+  projects: [],
 });
 
 export type AppshareStoreType = ReturnType<typeof initializeStore>;
@@ -78,28 +78,28 @@ export const initializeStore = (
         }));
       }
     },
-    fetchPosts: async (sort: string) => {
-      const responseData = await getRequest("/api/posts", {
+    fetchProjects: async (sort: string) => {
+      const responseData = await getRequest("/api/projects", {
         params: { sort },
       });
 
       if (responseData && responseData.data) {
         set(() => ({
           activeTab: sort,
-          posts: responseData.data,
+          projects: responseData.data,
         }));
       } else {
         alertMessage(responseData?.error);
       }
     },
-    setPosts: (projects: AppshareProject[]) => {
+    setProjects: (projects: AppshareProject[]) => {
       set(() => ({
-        posts: projects,
+        projects: projects,
       }));
     },
-    setShowPost: (project: AppshareProject) => {
+    setShowProject: (project: AppshareProject) => {
       set(() => ({
-        showPost: project,
+        showProject: project,
       }));
     },
     addLike: async (
@@ -115,19 +115,19 @@ export const initializeStore = (
       } else {
         if (isShowPage) {
           set(() => ({
-            showPost: responseData.data,
+            showProject: responseData.data,
           }));
         } else {
-          const newPosts = get().posts.map((post) => {
-            if (post.id === responseData.data["id"]) {
+          const newProjects = get().projects.map((project) => {
+            if (project.id === responseData.data["id"]) {
               return responseData.data;
             }
 
-            return post;
+            return project;
           });
 
           set(() => ({
-            posts: newPosts,
+            projects: newProjects,
           }));
         }
       }

@@ -1,7 +1,7 @@
 import checkAuth from "@/server/auth/checkAuth";
 import uploadImage from "@/server/cloudinary/uploadImage";
-import createPost from "@/server/database/posts/createPost";
-import getPosts from "@/server/database/posts/getPosts";
+import createProject from "@/server/database/projects/createProject";
+import getAllProjects from "@/server/database/projects/getProjects";
 import { convertListTags } from "@/server/utils/tagsConversion";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -11,7 +11,7 @@ type Data = {
 };
 
 const getProjects = async (queryParams: string) => {
-  const projects = await getPosts(queryParams);
+  const projects = await getAllProjects(queryParams);
   if (projects) {
     return { data: projects, error: null, statusCode: 200 };
   } else {
@@ -53,7 +53,7 @@ const addProject = async (req: NextApiRequest) => {
   }
 
   try {
-    const project = await createPost(
+    const project = await createProject(
       req.body["title"],
       req.body["description"],
       req.body["projectUrl"],

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import getPost from "@/server/database/posts/getPost";
+import getProject from "@/server/database/projects/getProject";
 import { CurrentProject } from "@/client/models";
 import { GetServerSideProps } from "next/types";
 import PageHead from "@/components/PageHead";
@@ -23,15 +23,15 @@ const ViewProject = ({
   comments: Comment[];
 }) => {
   const [openPicker, setOpenPicker] = useState(false);
-  const currentProject = useStore((state) => state.showPost);
-  const setShowPost = useStore((state) => state.setShowPost);
+  const currentProject = useStore((state) => state.showProject);
+  const setShowProject = useStore((state) => state.setShowProject);
   const user = useStore((state) => state.user);
   const router = useRouter();
   const { id } = router.query;
 
   useEffect(() => {
     if (project && project !== currentProject) {
-      setShowPost(project);
+      setShowProject(project);
     }
   }, []);
 
@@ -60,7 +60,7 @@ const ViewProject = ({
               isSinglePage={true}
               isOpen={openPicker}
               setIsOpen={setOpenPicker}
-              url={`/api/posts/${project.id}/like`}
+              url={`/api/projects/${project.id}/like`}
               button={
                 <LikeButton onClick={() => setOpenPicker((prev) => !prev)} />
               }
@@ -83,11 +83,11 @@ const ViewProject = ({
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (params && params.id && typeof params.id === "string") {
-    const project = await getPost(parseInt(params.id));
+    const project = await getProject(parseInt(params.id));
     const comments = await getComments(params.id);
     const zustandStore = initializeStore();
     if (project) {
-      zustandStore.getState().setShowPost(project);
+      zustandStore.getState().setShowProject(project);
       return {
         props: {
           initialZustandState: JSON.parse(

@@ -5,12 +5,12 @@ import CreateForm from "@/components/CreateForm";
 import { initializeStore, useStore } from "@/zustand";
 import TabMenu from "@/components/TabMenu";
 import { GetServerSideProps } from "next/types";
-import getPosts from "@/server/database/posts/getPosts";
+import getProjects from "@/server/database/projects/getProjects";
 
 export default function Home({ projects }) {
   const user = useStore((state) => state.user);
-  const currentProjects = useStore((state) => state.posts);
-  const setProjects = useStore((state) => state.setPosts);
+  const currentProjects = useStore((state) => state.projects);
+  const setProjects = useStore((state) => state.setProjects);
 
   useEffect(() => {
     if (currentProjects !== projects) {
@@ -36,11 +36,11 @@ export default function Home({ projects }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const projects = await getPosts();
+  const projects = await getProjects();
   const zustandStore = initializeStore();
   console.log("BLOBZORD");
   if (projects) {
-    zustandStore.getState().setPosts(projects);
+    zustandStore.getState().setProjects(projects);
   }
 
   return {

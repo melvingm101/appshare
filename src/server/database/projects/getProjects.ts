@@ -19,7 +19,7 @@ const getOrderBy = (sort: string) => {
   }
 };
 
-const getPosts = async (sort = "latest") => {
+const getProjects = async (sort = "latest") => {
   try {
     const projects = await prisma.project.findMany({
       select: {
@@ -43,4 +43,4 @@ const getPosts = async (sort = "latest") => {
   }
 };
 
-export default getPosts;
+export default getProjects;

@@ -83,7 +83,7 @@ const Card = ({ project }: { project: CurrentProject }) => {
               isSinglePage={false}
               isOpen={openPicker}
               setIsOpen={setOpenPicker}
-              url={`/api/posts/${project.id}/like`}
+              url={`/api/projects/${project.id}/like`}
               button={
                 <EmojiButton onClick={() => setOpenPicker((prev) => !prev)} />
               }

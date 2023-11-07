@@ -1,6 +1,6 @@
 import React from "react";
 
-const LikePostButton = () => {
+const LikeProjectButton = () => {
   return (
     <svg
       width="20"
@@ -21,4 +21,4 @@ const LikePostButton = () => {
   );
 };
 
-export default LikePostButton;
+export default LikeProjectButton;

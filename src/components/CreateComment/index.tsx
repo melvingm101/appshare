@@ -12,7 +12,7 @@ const CreateComment = ({ id }: { id: number }) => {
   const onSubmit = async (data: any) => {
     const token = await firebaseUser.getIdToken();
     const response = await postRequest(
-      `/api/posts/${id}/comments`,
+      `/api/projects/${id}/comments`,
       data,
       token
     );

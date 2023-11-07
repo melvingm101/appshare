@@ -1,7 +1,7 @@
 import { Tags } from "@prisma/client";
 import { prisma } from "..";
 
-const createPost = async (
+const createProject = async (
   title: string,
   description: string,
   projectUrl: string,
@@ -33,4 +33,4 @@ const createPost = async (
   }
 };
 
-export default createPost;
+export default createProject;

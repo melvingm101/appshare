@@ -3,7 +3,7 @@ import { useStore } from "@/zustand";
 import TabItem from "../TabItem";
 
 const TabMenu = () => {
-  const fetchPosts = useStore((state) => state.fetchPosts);
+  const fetchProjects = useStore((state) => state.fetchProjects);
   const activeTab = useStore((state) => state.activeTab);
 
   return (
@@ -11,17 +11,17 @@ const TabMenu = () => {
       <ul className="flex items-center gap-2 text-sm font-medium">
         <TabItem
           text="Latest"
-          onClick={() => fetchPosts("latest")}
+          onClick={() => fetchProjects("latest")}
           isActive={activeTab === "latest"}
         />
         <TabItem
           text="Most reacted"
-          onClick={() => fetchPosts("reacted")}
+          onClick={() => fetchProjects("reacted")}
           isActive={activeTab === "reacted"}
         />
         <TabItem
           text="Most viewed"
-          onClick={() => fetchPosts("viewed")}
+          onClick={() => fetchProjects("viewed")}
           isActive={activeTab === "viewed"}
         />
       </ul>

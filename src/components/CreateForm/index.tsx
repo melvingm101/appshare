@@ -64,7 +64,7 @@ const CreateForm = () => {
 
   const onSubmit = async (data: any) => {
     const token = await firebaseUser.getIdToken();
-    const response = await postRequest("/api/posts", data, token);
+    const response = await postRequest("/api/projects", data, token);
     if (response?.data) {
       router.push(`/projects/${response.data.id}`);
     } else {

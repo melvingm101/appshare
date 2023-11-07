@@ -31,7 +31,7 @@ const CommentCard = ({
             <EmojiPicker
               id={comment.id}
               isSinglePage={false}
-              url={`/api/posts/${projectId}/comments/${comment.id}/like`}
+              url={`/api/projects/${projectId}/comments/${comment.id}/like`}
             />
           )}
           {/* <ReactionList likes={comment.CommentLikes} isSinglePage={false} /> */}
